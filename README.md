@@ -14,3 +14,5 @@ Allows users to search the Art Institute of Chicago collection by artist and dis
 
 # Extra-advanced deliverables:
 1) The user can access a JSON of their friends’ favorite artworks
+
+gabriel added change
