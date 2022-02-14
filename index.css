@@ -1,0 +1,22 @@
+#main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#detail-image {
+    height: 200px;
+    width: 200px;
+}
+
+#artwork-detail {
+    float: left;
+    text-align: left;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#artwork-detail div {
+    margin: 10px;
+    min-width: 220px;
+}
