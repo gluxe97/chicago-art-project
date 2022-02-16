@@ -16,26 +16,30 @@
     </form>
     <div id='artwork-detail'>
       <div id='basic-details'>
-        <h3 id='title'>Title: </h3>
+        <h3 id='title'></h3>
         <img id='detail-image'>
-        <p id='dept'>Museum department:</p>
+        <p id='dept'></p>
       </div>
       <div id='advance-details'>
-        <p id='artist_display'>Artist</p>
-        <div id='origins'>
-          <p id='place_of_origin'>Place of origin</p>
-          <p id='date_display'>Date</p>
-        </div>
-        <p id='medium_display'>Medium</p>
-        <p id='theme_titles'>Theme</p>
-    </div> 
-    </div>
-    <div>
-      <h2>Artwork Collection</h2>
+        <p id='artist_display'></p>
+        <p id='place_of_origin'></p>
+        <p id='date_display'></p>
+        <p id='medium_display'></p>
+        <p id='theme_titles'></p>
+        <form id="favorite-form">
+          <div>
+            <label for="comment">Thoughts on this piece:</label>
+            <textarea id="comment" form="favorite-form" name="comment" rows="5"></textarea>
+          </div>
+          <div>
+            <input type="submit" value="Save Favorite"/>
+          </div>
+        </form>
+      </div> 
     </div>
     <div id='artwork-list'>
-
     </div>
+    <div id='favorites'></div>
   </div>
 </body>
 </html>

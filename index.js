@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     //Save needed DOM elements to variables
     const searchForm = document.getElementById("artist-search");
+    const favoriteForm = document.getElementById("favorite-form");
     const artwork = document.getElementById("artwork-list");
     const title = document.getElementById("title");
     const detailImg = document.getElementById("detail-image");
@@ -10,6 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const date = document.getElementById("date_display");
     const medium = document.getElementById("medium_display");
     const themes = document.getElementById("theme_titles");
+    const favorites = document.getElementById("favorites");
+
 
     //Add event listener on search form submit
     searchForm.addEventListener("submit", (e) => {
@@ -42,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 fetchArtworks(artworkIds.join());
                 fetchDetails(artworkIds[0]);
             } else {
-                alert(`The Chicago Museum of Art collection contains no works by ${e.target.search.value}`);
+                alert(`The Chicago Museum of Art collection contains no works by ${artist}`);
             }
         })
         searchForm.reset();
@@ -52,11 +55,14 @@ document.addEventListener("DOMContentLoaded", () => {
     //Fetch to artworks endpoint with list of artwork ids
     //Add fetched artworks to artwork-list div with click event listeners
     function fetchArtworks(idString) {
-        artwork.innerHTML = "";
+        artwork.innerHTML = "<h2>Artwork Collection</h2>";
+        
         fetch(`https://api.artic.edu/api/v1/artworks?ids=${idString}`)
         .then((resp) => resp.json())
         .then((json) => {
             json.data.forEach((art) => {
+                displayArt(art, artwork);
+                /*
                 const artDiv = document.createElement('div');
                 const artTitle = document.createElement('p');
                 const artImg = document.createElement('img');
@@ -73,9 +79,46 @@ document.addEventListener("DOMContentLoaded", () => {
                 artTitle.textContent = art.title;
                 artDiv.append(artTitle, artImg);
                 artwork.appendChild(artDiv);
+                */
             })
             
         })
+    }
+
+    //Display artwork to DOM
+    function displayArt(art, container) {
+        const artDiv = document.createElement('div');
+        const artTitle = document.createElement('p');
+        const artImg = document.createElement('img');
+        
+        artDiv.id = art.id;
+        artDiv.addEventListener("click",() => fetchDetails(artDiv.id));
+        if (art.image_id) {
+            artImg.src = `https://www.artic.edu/iiif/2/${art.image_id}/full/843,/0/default.jpg`
+            artImg.alt = art.alt_text;
+        } else {
+            artImg.src = "./images/noImageFound.jpeg";
+            artImg.alt = 'A man at a painting class has painted his canvas yellow and written "No!". Text on the image reads "No image found for this artwork"';
+        }
+        artTitle.textContent = art.title;
+        artDiv.append(artTitle, artImg);
+        container.appendChild(artDiv);
+    }
+
+    //add favorite to DB and DOM
+    function addFavorite(data, comment) {
+        fetch(`http://localhost:3000/favorites`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({"id": data.id, "comment": comment})
+        })
+        .then(() => {
+            displayArt(data,favorites);
+        })
+        .catch((err) => alert(err))
     }
 
     //Fetch art by its ID and display additional details to details DOM
@@ -92,16 +135,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 detailImg.src = "./images/noImageFound.jpeg";
                 detailImg.alt = 'A man at a painting class has painted his canvas yellow and written "No!". Text on the image reads "No image found for this artwork"';
             }
-            dept.textContent = `Department: ${data.department_title}, ${data.department_id}`;
-            artistDisp.textContent = data.artist_display;
-            place.textContent = `${data.place_of_origin}, `;
-            date.textContent = data.date_display;
-            medium.textContent = data.medium_display;
+            dept.textContent = `Museum department: ${data.department_title}, ${data.department_id}`;
+            artistDisp.textContent = `Artist: ${data.artist_display}`;
+            place.textContent = `Place of Origin: ${data.place_of_origin}`;
+            date.textContent = `Date Created: ${data.date_display}`;
+            medium.textContent = `Medium: ${data.medium_display}`;
             if(data.theme_titles[0]) {
                 themes.textContent = `Themes: ${data.theme_titles}`;
             } else {
                 themes.textContent = "";
             }
+
+             //Add event listener on favorite form submit
+            favoriteForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                console.log(data);
+                addFavorite(data, e.target.comment.value);
+            })
         })
     }
 })
