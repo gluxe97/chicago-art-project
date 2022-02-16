@@ -52,12 +52,20 @@ h3 {
     width: 500px;
     max-width: 100%;
     height: auto;
+    /* border: 5px solid black;
+    border-radius: 4px;
+    padding: 5% 10%;
+    box-shadow: -2px 2px 15px 5px #818080;
+    margin: auto; */
+    display: flex;
+}
+
+.frame {
     border: 5px solid black;
     border-radius: 4px;
     padding: 5% 10%;
     box-shadow: -2px 2px 15px 5px #818080;
     margin: auto;
-    display: flex;
 }
 
 #advance-details {

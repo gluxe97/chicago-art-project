@@ -129,6 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = json.data;
             title.textContent = data.title;
             if (data.image_id) {
+                detailImg.classList.add("frame");
                 detailImg.src = `https://www.artic.edu/iiif/2/${data.image_id}/full/843,/0/default.jpg`;
                 detailImg.alt = data.alt_text;
             } else {
