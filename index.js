@@ -12,8 +12,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const medium = document.getElementById("medium_display");
     const themes = document.getElementById("theme_titles");
     const favorites = document.getElementById("favorites");
+    const comment = document.getElementById("comment");
+    const updateFav = document.getElementById("update-favorite");
 
-
+    //fetch favorites and display to favorites div
+    fetch(`http://localhost:3000/favorites`)
+    .then((resp) => resp.json())
+    .then((json) => {
+        const favIds = [];
+        json.forEach((fav) => {
+            favIds.push(fav.id);
+        })
+        if (favIds.join() !== "") {
+            favorites.innerHTML = "<h2>Favorited Works</h2>";
+            fetchArtworks(favIds.join(), favorites);
+        }
+    })
+    
     //Add event listener on search form submit
     searchForm.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -42,7 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             //if the array isn't empty, call the function to fetch the artworks and add them to the DOM
             if (artworkIds.join() !== "") {
-                fetchArtworks(artworkIds.join());
+                artwork.innerHTML = "<h2>Artwork Collection</h2>";
+                fetchArtworks(artworkIds.join(), artwork);
                 fetchDetails(artworkIds[0]);
             } else {
                 alert(`The Chicago Museum of Art collection contains no works by ${artist}`);
@@ -54,32 +70,12 @@ document.addEventListener("DOMContentLoaded", () => {
     //Clear previous artworks from artwork-list.
     //Fetch to artworks endpoint with list of artwork ids
     //Add fetched artworks to artwork-list div with click event listeners
-    function fetchArtworks(idString) {
-        artwork.innerHTML = "<h2>Artwork Collection</h2>";
-        
+    function fetchArtworks(idString, container) {
         fetch(`https://api.artic.edu/api/v1/artworks?ids=${idString}`)
         .then((resp) => resp.json())
         .then((json) => {
             json.data.forEach((art) => {
-                displayArt(art, artwork);
-                /*
-                const artDiv = document.createElement('div');
-                const artTitle = document.createElement('p');
-                const artImg = document.createElement('img');
-                
-                artDiv.id = art.id;
-                artDiv.addEventListener("click",() => fetchDetails(artDiv.id));
-                if (art.image_id) {
-                    artImg.src = `https://www.artic.edu/iiif/2/${art.image_id}/full/843,/0/default.jpg`
-                    artImg.alt = art.alt_text;
-                } else {
-                    artImg.src = "./images/noImageFound.jpeg";
-                    artImg.alt = 'A man at a painting class has painted his canvas yellow and written "No!". Text on the image reads "No image found for this artwork"';
-                }
-                artTitle.textContent = art.title;
-                artDiv.append(artTitle, artImg);
-                artwork.appendChild(artDiv);
-                */
+                displayArt(art, container);
             })
             
         })
@@ -128,6 +124,8 @@ document.addEventListener("DOMContentLoaded", () => {
         .then((json) => {
             const data = json.data;
             title.textContent = data.title;
+            comment.value = '';
+            
             if (data.image_id) {
                 detailImg.classList.add("frame");
                 detailImg.src = `https://www.artic.edu/iiif/2/${data.image_id}/full/843,/0/default.jpg`;
@@ -147,11 +145,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 themes.textContent = "";
             }
 
-             //Add event listener on favorite form submit
+            //Add event listener on favorite form submit
+            favoriteForm.classList.remove("hidden");
             favoriteForm.addEventListener("submit", (e) => {
                 e.preventDefault();
                 console.log(data);
                 addFavorite(data, e.target.comment.value);
+            })
+
+            fetch(`http://localhost:3000/favorites/${artId}`)
+            .then((resp) => resp.json())
+            .then((data) => {
+                if(JSON.stringify(data)!=="{}") {
+                    comment.value = data.comment;
+                    updateFav.classList.remove("hidden");
+                } else {
+                    updateFav.classList.add("hidden");
+                }
+                console.log(json)
             })
         })
     }

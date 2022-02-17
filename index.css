@@ -77,3 +77,43 @@ h3 {
     margin: 25px;
     background: white;
 }
+
+nav {
+    width: 25vw;
+    height: 100vh;
+}
+
+#advance-details .hidden {
+    visibility: hidden;
+}
+
+#artwork-list {
+    overflow: scroll;
+    height: 45vh;
+    display: flex;
+    flex-direction: column;
+    max-width: fit-content;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        lavender 10px,
+        lavender 20px
+    );
+}
+
+#artwork-list div {
+    font-size: 2vh;
+    margin-top: 4vh;
+    padding-top: 4vh;
+    background-color: cornflowerblue;
+    border-top-left-radius: 30%;
+    border-top-right-radius: 30%;
+    height: auto;
+    width: 50px;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}

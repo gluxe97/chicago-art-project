@@ -26,19 +26,21 @@
         <p id='date_display'></p>
         <p id='medium_display'></p>
         <p id='theme_titles'></p>
-        <form id="favorite-form">
+        <form id="favorite-form" class="hidden">
           <div>
             <label for="comment">Thoughts on this piece:</label>
             <textarea id="comment" form="favorite-form" name="comment" rows="5"></textarea>
           </div>
           <div>
             <input type="submit" value="Save Favorite"/>
+            <button id="update-favorite" class="hidden" type="button">Update Favorite</button>
           </div>
         </form>
       </div> 
     </div>
-    <div id='artwork-list'>
-    </div>
+    <nav>
+      <div id='artwork-list'></div>
+    </nav>
     <div id='favorites'></div>
   </div>
 </body>
