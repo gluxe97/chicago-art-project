@@ -1,7 +1,7 @@
-//Global variable declarations
+//GLOBAL VARIABLE DECLARATIONS
 let advanceDetails, artistDisp, artwork, comment, date, deleteFav, dept, detailImg, favoriteForm, favorites, medium, place, searchForm, submitFav, title;
-
-//Function declarations
+//FUNCTION DECLARATIONS
+//===============================================================================
 //Get elements from DOM and save to global variables
 function getElements() {
     searchForm = document.getElementById("artist-search");
@@ -18,39 +18,21 @@ function getElements() {
     favorites = document.getElementById("favorites");
     advanceDetails = document.getElementById("advance-details");
 }
-
-//add favorite to DB and DOM
-function addFavorite(data, form, comment) {
-    fetch(`http://localhost:3000/favorites`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        },
-        body: JSON.stringify({"id": data.id, "comment": comment})
+//Fetch favorites from local DB, pass ids to fetch artworks form museum endpoint for display
+function fetchFavorites () {
+    fetch(`http://localhost:3000/favorites`)
+    .then((resp) => resp.json())
+    .then((json) => {
+        const favIds = [];
+        json.forEach((fav) => {
+            favIds.push(fav.id);
+        })
+        if (favIds.join() !== "") {
+            favorites.innerHTML = "<h2>Favorited Works</h2>";
+            fetchArtworks(favIds.join(), favorites);
+        }
     })
-    .then(() => {
-        displayArt(data,favorites);
-        alert("Added to favorites!");
-        form.remove();
-    })
-    .catch((err) => alert(err))
 }
-
-//Display artwork to DOM, given art json object and the html container to display in
-function displayArt(art, container) {
-    const artDiv = document.createElement('div');
-    const artTitle = document.createElement('p');
-    const artImg = document.createElement('img');
-    
-    artDiv.id = art.id;
-    artDiv.addEventListener("click",() => fetchDetails(artDiv.id));
-    imageDisp(art.image_id, artImg, art.alt_text);
-    artTitle.textContent = art.title;
-    artDiv.append(artTitle, artImg);
-    container.appendChild(artDiv);
-}
-
 //Fetch to artworks endpoint with list of artwork ids
 //Add fetched artworks to supplied container with call to displayArt
 function fetchArtworks(idString, container) {
@@ -62,7 +44,19 @@ function fetchArtworks(idString, container) {
         })
     })
 }
-//Image check and display
+//Display artwork to DOM with click event listener, given art json object and the html container to display in
+function displayArt(art, container) {
+    const artDiv = document.createElement('div');
+    const artTitle = document.createElement('p');
+    const artImg = document.createElement('img');
+    artDiv.id = art.id;
+    artDiv.addEventListener("click",() => fetchDetails(artDiv.id));
+    imageDisp(art.image_id, artImg, art.alt_text);
+    artTitle.textContent = art.title;
+    artDiv.append(artTitle, artImg);
+    container.appendChild(artDiv);
+}
+//Check if there is an image for this artwork, if not display stock no image found jpeg and alt text
 function imageDisp(imgId, img, altText) {
     if (imgId) {
         img.src = `https://www.artic.edu/iiif/2/${imgId}/full/843,/0/default.jpg`
@@ -72,7 +66,25 @@ function imageDisp(imgId, img, altText) {
         img.alt = 'A man at a painting class has painted his canvas yellow and written "No!". Text on the image reads "No image found for this artwork"';
     }
 }
-
+//Fetch artwork by Id to museum artworks/id endpoint and display additional details to DOM.
+//Try fetch to favorites local db. Create favoriting form and options based on whether that
+//id is already saved to local db.
+function fetchDetails(artId) {
+    fetch(`https://api.artic.edu/api/v1/artworks/${artId}`)
+    .then((resp) => resp.json())
+    .then((json) => {
+        const data = json.data;
+        favoriteForm.reset();
+        fetch(`http://localhost:3000/favorites/${artId}`)
+        .then((resp) => resp.json())
+        .then((fav) => {
+            createForm(fav, data);
+            detailsDisp(data);
+            imageDisp(data.image_id, detailImg, data.alt_text);
+            detailImg.classList.add("frame");
+        })
+    })
+}
 //Display fetched details in detailed display area
 function detailsDisp(artObj) {
     title.textContent = artObj.title;
@@ -87,8 +99,40 @@ function detailsDisp(artObj) {
         themes.textContent = "";
     }
 }
-
-//Create update event listener
+//Create favorite form based on whether the displayed artwork is already a favorite
+//Call functions to create appropriate event listeners
+function createForm (fav, artObj) {
+    favoriteForm.remove();
+    favoriteForm = document.createElement("form")
+    favoriteForm.id = "favorite-form";
+    advanceDetails.appendChild(favoriteForm);
+    const label = document.createElement("label");
+    label.textContent = "Thoughts on this artwork:";
+    comment = document.createElement("textarea");
+    comment.id = "comment";
+    comment.name = "comment";
+    comment.rows = 5;
+    comment.form = "favorite-form";
+    submitFav = document.createElement("input");
+    submitFav.id = "favorite-submit"
+    submitFav.type = "submit"
+    if(JSON.stringify(fav)!=="{}") {
+        comment.value = fav.comment;
+        deleteFav = document.createElement("button");
+        deleteFav.id = "favorite-delete";
+        deleteFav.type = "button";
+        deleteFav.textContent = "Delete Favorite";
+        submitFav.value = "Update Favorite"
+        favoriteForm.append(label,comment,submitFav,deleteFav);
+        favUpdateEvent(favoriteForm, fav.id);
+        favDeleteEvent(favoriteForm, deleteFav, fav.id);
+    } else {
+        submitFav.value = "Save Favorite";
+        favoriteForm.append(label,comment,submitFav);
+        favAddEvent(artObj, favoriteForm);
+    }
+}
+//Create update event listener on favorite form, alert user of the update, and then remove form
 function favUpdateEvent(form, favId) {
     form.addEventListener("submit",(e) => {
         e.preventDefault();
@@ -107,8 +151,9 @@ function favUpdateEvent(form, favId) {
         .catch((err) => alert(err))
     })
 }
-
-//Create delete event listener
+//Create delete event listener on favorite form button.
+//Remove artwork from favorites local db, alert user it is removed
+//Then remove favorite form, and favorite from DOM
 function favDeleteEvent(form, button, favId) {
     button.addEventListener("click", () => {
         fetch(`http://localhost:3000/favorites/${favId}`, {
@@ -125,90 +170,35 @@ function favDeleteEvent(form, button, favId) {
         .catch((err) => alert(err))
     });
 }
-
-//Create add event listener
+//Create add event listener on favorite form, call add favorite function
 function favAddEvent(obj, form) {
     form.addEventListener("submit", (e) => {
         e.preventDefault();
         addFavorite(obj, form, e.target.comment.value);
     })
 }
-
-//Create favorite form
-function createForm (fav, artObj) {
-    favoriteForm.remove();
-    
-    favoriteForm = document.createElement("form")
-    favoriteForm.id = "favorite-form";
-    advanceDetails.appendChild(favoriteForm);
-    const label = document.createElement("label");
-    label.textContent = "Thoughts on this artwork:";
-    comment = document.createElement("textarea");
-    comment.id = "comment";
-    comment.name = "comment";
-    comment.rows = 5;
-    comment.form = "favorite-form";
-    submitFav = document.createElement("input");
-    submitFav.id = "favorite-submit"
-    submitFav.type = "submit"
-    
-    if(JSON.stringify(fav)!=="{}") {
-        comment.value = fav.comment;
-        deleteFav = document.createElement("button");
-        deleteFav.id = "favorite-delete";
-        deleteFav.type = "button";
-        deleteFav.textContent = "Delete Favorite";
-        submitFav.value = "Update Favorite"
-        favoriteForm.append(label,comment,submitFav,deleteFav);
-        favUpdateEvent(favoriteForm, fav.id);
-        favDeleteEvent(favoriteForm, deleteFav, fav.id);
-    } else {
-        submitFav.value = "Save Favorite";
-        favoriteForm.append(label,comment,submitFav);
-        favAddEvent(artObj, favoriteForm);
-    }
-}
-
-//Fetch art by its ID and display additional details to details DOM
-function fetchDetails(artId) {
-    fetch(`https://api.artic.edu/api/v1/artworks/${artId}`)
-    .then((resp) => resp.json())
-    .then((json) => {
-        const data = json.data;
-        favoriteForm.reset();
-
-        //check if artwork being displayed is saved to favorites
-        //if favorite, show saved comment in text area and options
-        //to update or remove from favorites, if not display empty
-        //text area and save favorite submit.
-        fetch(`http://localhost:3000/favorites/${artId}`)
-        .then((resp) => resp.json())
-        .then((fav) => {
-            createForm(fav, data);
-            detailsDisp(data);
-            imageDisp(data.image_id, detailImg, data.alt_text);
-            detailImg.classList.add("frame");
-        }) 
+//Add favorite to local DB and DOM, alert user it's been added, and remove form to add
+function addFavorite(data, form, comment) {
+    fetch(`http://localhost:3000/favorites`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        body: JSON.stringify({"id": data.id, "comment": comment})
     })
+    .then(() => {
+        displayArt(data,favorites);
+        alert("Added to favorites!");
+        form.remove();
+    })
+    .catch((err) => alert(err))
 }
-
+//DOMContentLoaded event listener with function calls and search form event listener
+//=========================================================================================
 document.addEventListener("DOMContentLoaded", () => {
     getElements();
-
-    //fetch favorites and display to favorites div
-    fetch(`http://localhost:3000/favorites`)
-    .then((resp) => resp.json())
-    .then((json) => {
-        const favIds = [];
-        json.forEach((fav) => {
-            favIds.push(fav.id);
-        })
-        if (favIds.join() !== "") {
-            favorites.innerHTML = "<h2>Favorited Works</h2>";
-            fetchArtworks(favIds.join(), favorites);
-        }
-    })
-    
+    fetchFavorites();
     //Add event listener on search form submit
     searchForm.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -220,7 +210,6 @@ document.addEventListener("DOMContentLoaded", () => {
             let i = 0;
             const artworkIds = [];
             let jsonArtist;
-
             //loops through up to 100 id, artist_title elements returned by fetch to check if artist_title is set.
             //If artist_title is not null, checks if case insensitive text input from search form is contained by
             //case insensitive artist_title. If contained, adds artwork id to array for next fetch. When ten matches
