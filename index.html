@@ -8,40 +8,49 @@
   <link rel='stylesheet' href='index.css'/>
 </head>
 <body>
-  <div id='main'>
-    <h1>Search the Art Institute of Chicago collection by artist name</h3>
-    <form id='artist-search'>
-      <input id='search' type='text' name='search'>
-      <input type='submit' name='submit'/>
-    </form>
-    <div id='artwork-detail'>
-      <div id='basic-details'>
-        <h3 id='title'></h3>
-        <img id='detail-image'>
-        <p id='dept'></p>
-      </div>
-      <div id='advance-details'>
-        <p id='artist_display'></p>
-        <p id='place_of_origin'></p>
-        <p id='date_display'></p>
-        <p id='medium_display'></p>
-        <p id='theme_titles'></p>
-        <form id="favorite-form">
-          <!--<div>
-            <label for="comment">Thoughts on this piece:</label>
-            <textarea id="comment" form="favorite-form" name="comment" rows="5"></textarea>
-          </div>
-          <div>
-            <input id="favorite-submit" type="submit" value="Save Favorite" />
-            <button id="favorite-delete" class="hidden" type="button">Delete Favorite</button>
-          </div>-->
-        </form>
-      </div> 
+  <header>
+    <div>
+      <h1>Search the Art Institute of Chicago collection by artist name</h3>
+      <form id='artist-search'>
+        <input id='search' type='text' name='search'>
+        <input type='submit' name='submit'/>
+      </form>
     </div>
     <nav>
       <div id='artwork-list'></div>
     </nav>
-    <div id='favorites'></div>
-  </div>
+  </header>
+  <main>
+    <div id='main'>
+      
+      <div id='artwork-detail'>
+        <div id='basic-details'>
+          <h3 id='title'></h3>
+          <img id='detail-image'>
+          <p id='dept'></p>
+        </div>
+        <div id='advance-details'>
+          <p id='artist_display'></p>
+          <p id='place_of_origin'></p>
+          <p id='date_display'></p>
+          <p id='medium_display'></p>
+          <p id='theme_titles'></p>
+          <form id="favorite-form" class="hidden">
+            <!-- <div>
+              <label for="comment">Thoughts on this piece:</label>
+              <textarea id="comment" form="favorite-form" name="comment" rows="5"></textarea>
+            </div>
+            <div>
+              <input id="favorite-submit" type="submit" value="Save Favorite" />
+              <button id="favorite-delete" class="hidden" type="button">Delete Favorite</button>
+            </div> -->
+          </form>
+        </div> 
+      </div>
+
+      <div id='favorites'></div>
+    </div>
+  </main>
 </body>
 </html>
+
