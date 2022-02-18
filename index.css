@@ -2,11 +2,13 @@
 p {
     font-size: 100%;
     font-weight: 100;
+    color: aliceblue;
 }
 
 h1 {
     font-size: 2.5em;
     text-align: center;
+    color: aliceblue;
 
 }
 
@@ -14,41 +16,48 @@ h2 {
     font-size: 2em;
     text-align: center;
     font-weight: 800;
+    color: aliceblue;
 }
 
 h3 {
     font-size: 1.5em;
     text-align: left;
     font-weight: 300;
+    color: aliceblue;
 }
 
 /* styling the body, which includes header, main, and favorites */
 body {
     font-family: Didot, serif;
+    background-color: rgb(5, 5, 5);
     /* width: 400px; */
 }
 
 /* styling the header which includes div (including page title and search button) and nav */
 header {
-    float: left;
+    width:100vw;
     max-width: 100%;
     height: auto;
+    padding-top: 10px;
     border-radius: 0 0 6px 0;
-    padding: 10px;
     margin-right: 10px;
     align-items: center;
+    background:rgb(5, 5, 5);
 }
 
 /* styling nav, which includes div #artwork-list */
 nav {
-    width: 25vw;
+    width: 20vw;
     height: 100%;
+    display:inline-flex;
+    float:left;
 }
 
 /* styling div #artwork-list, which includes all the divs that get created in JS when the searched artist exists */
 #artwork-list {
     overflow: scroll;
-    height: 100vh;
+    width:19vw;
+    height: 95vh;
     display: flex;
     flex-direction: column;
     max-width: 100%;
@@ -70,12 +79,16 @@ nav {
 }
 
 /* styling main, which includes div #main and div #favorites */
-main {
-    max-width: 100%;
+#main {
+    height:95vh;
+    width:75vw;
+    display:inline-flex;
+    float:right;
+}
     /* float: left;
     margin-left: 100px;
     width: 200px; */
-}
+
 
 /* styling div #main, which includes div #artwork-detail */
 /* #main {
@@ -87,14 +100,16 @@ main {
 #artist-search {
     font-family: Didot, serif;
     align-items: center;
+    display: inline-flex;
+    padding-inline-start: 45%;
 }
 
 /* styling div #artwork-detail, which includes div #basic-details and div #advance-details */
 #artwork-detail {
-    height: auto;
-    width: 1013px;
+    height: 94vh;
+    width: 74vw;
     overflow: auto;
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
     flex-wrap: wrap;
     align-items: center;
@@ -104,12 +119,23 @@ main {
 #basic-details {
     width: 60%;
     float: left;
+    display: inline-flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+#basic-details > h3 {
+    margin: 30px;
 }
 
 /* styling div #advance-details */
 #advance-details {
-    width: 30%;
+    padding-top: 100px;
+    width: 35%;
     float: right;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* hides div #advance-details until it gets added in JS */
@@ -119,8 +145,8 @@ main {
 
 /* styling both #basic-details and #advance-details, it creates space between the two divs and sets that space background to white */
 #basic-details, #advance-details {
-    margin: 25px;
-    background: white;
+    margin: 10px;
+    background:rgb(5, 5, 5);
 }
 
 /* styling #detail-image */
@@ -138,4 +164,41 @@ main {
     padding: 5% 10%;
     box-shadow: -2px 2px 15px 5px #818080;
     margin: auto;
+}
+
+/*favorite form layout and sizing*/
+#favorite-form{
+    padding-top: 20px;
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    flex-direction: column;
+}
+
+#favorite-form > label {
+    color:aliceblue;
+    font-size: 150%;
+    font-family: cursive;
+}
+
+#favorites {
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    padding-top: 80px;
+}
+#favorites img {
+    max-width: 60%;
+    max-height: 80%;
+    height: auto;
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+#favorites > h2 { 
+position:relative;
+bottom:180px;
+left:47%;
 }
