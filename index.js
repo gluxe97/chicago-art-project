@@ -18,7 +18,6 @@ function getElements() {
     favorites = document.getElementById("favorites");
     advanceDetails = document.getElementById("advance-details");
 }
-<<<<<<< HEAD
 //Fetch favorites from local DB, pass ids to fetch artworks form museum endpoint for display
 function fetchFavorites () {
     fetch(`http://localhost:3000/favorites`)
@@ -32,20 +31,6 @@ function fetchFavorites () {
             favorites.innerHTML = "<h2>Favorited Works</h2>";
             fetchArtworks(favIds.join(), favorites);
         }
-=======
-document.addEventListener("DOMContentLoaded", () => {
-    getElements();
-
-//add favorite to DB and DOM
-function addFavorite(data, form, comment) {
-    fetch(`http://localhost:3000/favorites`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        },
-        body: JSON.stringify({"id": data.id, "comment": comment})
->>>>>>> 41af8d7 (Html elements organized and CSS styling attatched to those HTML elements)
     })
 }
 //Fetch to artworks endpoint with list of artwork ids
@@ -79,8 +64,6 @@ function imageDisp(imgId, img, altText) {
     } else {
         img.src = "./images/noImageFound.jpeg";
         img.alt = 'A man at a painting class has painted his canvas yellow and written "No!". Text on the image reads "No image found for this artwork"';
-        img.width = 400;
-        img.height = 500;
     }
 }
 //Fetch artwork by Id to museum artworks/id endpoint and display additional details to DOM.
@@ -211,30 +194,11 @@ function addFavorite(data, form, comment) {
     })
     .catch((err) => alert(err))
 }
-<<<<<<< HEAD
 //DOMContentLoaded event listener with function calls and search form event listener
 //=========================================================================================
 document.addEventListener("DOMContentLoaded", () => {
     getElements();
     fetchFavorites();
-=======
-
-
-    //fetch favorites and display to favorites div
-    fetch(`http://localhost:3000/favorites`)
-    .then((resp) => resp.json())
-    .then((json) => {
-        const favIds = [];
-        json.forEach((fav) => {
-            favIds.push(fav.id);
-        })
-        if (favIds.join() !== "") {
-            favorites.innerHTML = "<h2>Favorited Works</h2>";
-            fetchArtworks(favIds.join(), favorites);
-        }
-    })
-    
->>>>>>> 41af8d7 (Html elements organized and CSS styling attatched to those HTML elements)
     //Add event listener on search form submit
     searchForm.addEventListener("submit", (e) => {
         e.preventDefault();
