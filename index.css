@@ -1,4 +1,5 @@
-/* styling p, h1, h2, h3 for the entire document */
+/* STYLING ELEMENTS THAT APPLY TO THE ENTIRE DOCUMENT:*/
+/* body, p, h1, h2, h3 for the entire document */
 p {
     font-size: 100%;
     font-weight: 100;
@@ -22,105 +23,101 @@ h3 {
     font-weight: 300;
 }
 
-/* styling the body, which includes header, main, and favorites */
 body {
     font-family: Didot, serif;
-    /* width: 400px; */
 }
 
-/* styling the header which includes div (including page title and search button) and nav */
-header {
-    float: left;
-    max-width: 100%;
-    height: auto;
-    border-radius: 0 0 6px 0;
-    padding: 10px;
-    margin-right: 10px;
-    align-items: center;
-}
+/* ======================================================================================== */
 
-/* styling nav, which includes div #artwork-list */
-nav {
-    width: 25vw;
+/* STYLING THE GRID */
+
+.big-container {
+    display: grid; 
+
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    
+    gap: 50px;
     height: 100%;
 }
 
-/* styling div #artwork-list, which includes all the divs that get created in JS when the searched artist exists */
-#artwork-list {
-    overflow: scroll;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    max-width: 100%;
+#header {
+    /* background-color: #C5BBDD;  */
+    grid-row-start: 1;
+    grid-column-start: 1;
+
+    grid-row-end: 2;
+    grid-column-end: 3; 
 }
 
-/* styling the images inside div #arwork-list, they get created in JS */
+#left-navigation-bar {
+    /* background-color: #DCFFB6;  */
+    grid-row-start: 2;
+    grid-column-start: 1;
+
+    grid-row-end: 3;
+    grid-column-end: 2;
+
+    width: 15vw;
+    overflow: scroll;
+    height: 100vh;
+}
+
+#artwork-detail {
+    /* background-color: #75A655;  */
+    grid-row-start: 2;
+    grid-column-start: 2;
+
+    grid-row-end: 3;
+    grid-column-end: 3;
+    
+    height: auto;
+    width: 1000px;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+}
+
+#favorites {
+    /* background-color: #FB7CBD;  */
+    grid-row-start: 3;
+    grid-column-start: 1;
+
+    grid-row-end: 4;
+    grid-column-end: 3;
+    
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ======================================================================================== */
+
+/* STYLING INDIVIDUAL ELEMENTS */
+
+/* styling the div containing the images in #artwork-list, they get created in JS */
 #artwork-list div img {
     height: auto;
     max-width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     cursor: pointer;
-}
-
-/* styling the title (a simple 'p' element) of each image, it gets created in JS */
-#artwork-list p {
-    text-align: center;
-}
-
-/* styling main, which includes div #main and div #favorites */
-main {
-    max-width: 100%;
-    /* float: left;
-    margin-left: 100px;
-    width: 200px; */
-}
-
-/* styling div #main, which includes div #artwork-detail */
-/* #main {
-    display: flex;
-    flex-direction: column;
-} */
-
-/* styling the search button */
-#artist-search {
-    font-family: Didot, serif;
-    align-items: center;
-}
-
-/* styling div #artwork-detail, which includes div #basic-details and div #advance-details */
-#artwork-detail {
-    height: auto;
-    width: 1013px;
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-items: center;
 }
 
 /* styling div #basic-details, which includes #title, #detail-image, and #dept */
 #basic-details {
-    width: 60%;
+    width: 100%;
     float: left;
 }
 
 /* styling div #advance-details */
 #advance-details {
-    width: 30%;
+    /* width: 50%; */
     float: right;
 }
+
 
 /* hides div #advance-details until it gets added in JS */
 #advance-details .hidden {
     visibility: hidden;
-}
-
-/* styling both #basic-details and #advance-details, it creates space between the two divs and sets that space background to white */
-#basic-details, #advance-details {
-    margin: 25px;
-    background: white;
 }
 
 /* styling #detail-image */
@@ -128,7 +125,6 @@ main {
     width: 500px;
     max-width: 100%;
     height: auto;
-    display: flex;
 }
 
 /* styling the frame around the #detail-image. it comes on only in JS */
@@ -137,5 +133,34 @@ main {
     border-radius: 4px;
     padding: 5% 10%;
     box-shadow: -2px 2px 15px 5px #818080;
+    transition: 0.3s;
     margin: auto;
+}
+
+/* styling each div inside #favorites */
+#favorites div {
+    border: solid;
+    border-color: black;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: -1px 1px 10px 1px #c4c1c1;
+    transition: 0.3s;
+    margin: 10px;
+    float: left;
+    text-align: center;
+    width: 275px;
+    height: auto;
+}
+
+/* styling each image inside each div inside #favorites */
+#favorites div img {
+    height: auto;
+    max-height: 300px;
+    width: 250px;
+}
+
+/* styling the search button */
+#artist-search {
+    font-family: Didot, serif;
+    text-align: center;
 }
